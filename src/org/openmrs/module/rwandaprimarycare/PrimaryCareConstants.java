@@ -20,6 +20,12 @@ public class PrimaryCareConstants {
     public static final String GLOBAL_PROPERTY_DEFAULT_LOCATION_CODE = "registration.defaultLocationCode";
     public static final String GLOBAL_PROPERTY_INSURANCE_TYPE = "registration.insuranceTypeConcept";
     public static final String GLOBAL_PROPERTY_INSURANCE_NUMBER = "registration.insuranceNumberConcept";
+    
+    
+	public static final String GLOBAL_PROPERTY_INSURANCE_COVERAGE_START_DATE = "registration.insuranceCoverageStartDateConcept";
+	public static final String GLOBAL_PROPERTY_INSURANCE_EXPIRATION_DATE = "registration.insuranceExpirationDateConcept";
+	
+	
     public static final String GLOBAL_PROPERTY_NATIONAL_ID_TYPE = "registration.nationalIdType";
     public static final String SESSION_ATTRIBUTE_WORKSTATION_LOCATION = "primaryCareWorkstationLocation";
     public static final String GLOBAL_PROPERTY_HEALTH_CENTER_ATTRIBUTE_TYPE = "registration.healthCenterPersonAttribute";
@@ -31,5 +37,6 @@ public class PrimaryCareConstants {
     public final static String GLOBAL_PROPERTY_RESTRICT_BY_HEALTH_CENTER = "registration.restrictSearchByHealthCenter";
     public static final String MOTHER_NAME_ATTRIBUTE_TYPE = "Mother's name";
     public static final String FATHER_NAME_ATTRIBUTE_TYPE = "Father's name";
+	public static final String GLOBAL_PROPERTY_SERVICE_REQUESTED_CONCEPT_ANSWERS = "registration.serviceRequestedConceptAnswers";
     
 }

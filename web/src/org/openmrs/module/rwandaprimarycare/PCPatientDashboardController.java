@@ -50,6 +50,8 @@ public class PCPatientDashboardController {
             @RequestParam(required=false, value="gatherInsurance") Integer gatherInsurance,
             @RequestParam(required=false, value="insuranceNumber") String insuranceNumber,
             @RequestParam(required=false, value="insuranceType") Integer insuranceType,
+            @RequestParam(required=false, value="coverageStartDate") String coverageStartDate,
+            @RequestParam(required=false, value="expirationDate") String expirationDate,
             HttpSession session,
             ModelMap model) throws PrimaryCareException {
     	//LK: Need to ensure that all primary care methods only throw a PrimaryCareException
@@ -142,6 +144,8 @@ public class PCPatientDashboardController {
 	                    ca.getAnswerConcept().getNames();
 	                }
 	            model.addAttribute("servicesRequested", c);
+	            model.addAttribute("selectedServicesRequested", PrimaryCareUtil.getPrimaryCareServices());
+	            
 	            return "/module/rwandaprimarycare/serviceRequested";            
 	        }   
 	        
@@ -156,65 +160,93 @@ public class PCPatientDashboardController {
 	                /**
 	                 * ______________________ Appointment goes here:
 	                 */
-	                log.info("<<<<<<<<<<<<______BEFORE______\nProvider__"+registrationEncounterToday
-	                		.getProvider().getFamilyName()+"\nSession__"+session);
-	                PrimaryCareUtil.createWaitingAppointment(registrationEncounterToday.getProvider(), 
-	                		registrationEncounterToday, o, session, Context.getConceptService().getConcept(serviceRequestResponse));
+	               PrimaryCareUtil.createWaitingAppointment(registrationEncounterToday.getProvider(), registrationEncounterToday, o, session, Context.getConceptService().getConcept(serviceRequestResponse));
+				}
+			}
 
-	                log.info("<<<<<<<<<<<<______AFTER______\nProvider__"+registrationEncounterToday
-	                		.getProvider().getFamilyName()+"\nSession__"+session);
-	            }
-	        }
-	        
-	        if (gatherInsurance != null && gatherInsurance.equals(0)){
-	            
-	            model.addAttribute("mostRecentType", PrimaryCareBusinessLogic.getLastInsuranceType(patient));
-	            model.addAttribute("mostRecentInsuranceNumber", PrimaryCareBusinessLogic.getLastInsuranceNumber(patient));
-	            model.addAttribute("insuranceTypes", PrimaryCareBusinessLogic.getInsuranceTypeAnswers());
-	            
-	            return "/module/rwandaprimarycare/insuranceInformation";
-	        }    
-	
-	        if (insuranceType != null && registrationEncounterToday != null){
-	            if (!PrimaryCareUtil.doesEncounterContainObsWithConcept(registrationEncounterToday, PrimaryCareUtil.getInsuranceTypeConcept())){
-	                Obs insType = PrimaryCareUtil.newObs(patient, PrimaryCareUtil.getInsuranceTypeConcept(), registrationEncounterToday.getEncounterDatetime(), PrimaryCareBusinessLogic.getLocationLoggedIn(session));
-	                insType.setValueCoded(Context.getConceptService().getConcept(insuranceType));
-	                
-	                Obs insNum = null;
-	                if (insuranceNumber != null && !insuranceNumber.trim().equals("")){
-	                    insNum = PrimaryCareUtil.newObs(patient, PrimaryCareUtil.getInsuranceNumberConcept(), registrationEncounterToday.getEncounterDatetime(), PrimaryCareBusinessLogic.getLocationLoggedIn(session));
-	                    insNum.setValueText(insuranceNumber);
-	                }
-	                //TODO: the concept set thing doesn't work -- add g.p.??
-	    
-	                if (insNum != null)
-	                    registrationEncounterToday.addObs(insNum);
-	                registrationEncounterToday.addObs(insType);
-	                registrationEncounterToday = Context.getEncounterService().saveEncounter(registrationEncounterToday);
-	            }
-	        }
-    	} catch(Exception e)
-    	{
-    		throw new PrimaryCareException(e);
-    	} 
-        return "/module/rwandaprimarycare/patient";
-    }
-    
-    @RequestMapping("/module/rwandaprimarycare/patientIsPresent")
-    public String patientIsPresent(@RequestParam("patientId") int patientId, HttpSession session) throws PrimaryCareException {
-    	//LK: Need to ensure that all primary care methods only throw a PrimaryCareException
-    	//So that errors will be directed to a touch screen error page
-    	try{
-	    	//note:  this adds the registration encounter.  NOTE:  provider in the created encounter is the registration clerk.
-	        PrimaryCareBusinessLogic.patientSeen(
-	                        new Patient(patientId),
-	                        (Location) session.getAttribute(PrimaryCareConstants.SESSION_ATTRIBUTE_WORKSTATION_LOCATION),
-	                        new Date(), Context.getAuthenticatedUser());
-	        return "redirect:/module/rwandaprimarycare/patient.form?patientId=" + patientId + "&printBarCode=true&serviceRequested=0";
-    	} catch(Exception e)
-    	{
-    		throw new PrimaryCareException(e);
-    	}
-    }
+			if (gatherInsurance != null && gatherInsurance.equals(0)) {
+				if(PrimaryCareBusinessLogic.getLastInsuranceCoverageStartDate(patient)!=null
+						&& PrimaryCareBusinessLogic.getLastInsuranceExpirationDate(patient)!=null){
+					
+					model.addAttribute("coverageStartDate", Context.getDateFormat().format(PrimaryCareBusinessLogic.getLastInsuranceCoverageStartDate(patient)));
+					model.addAttribute("expirationDate", Context.getDateFormat().format(PrimaryCareBusinessLogic.getLastInsuranceExpirationDate(patient)));
+				}
+				
+				model.addAttribute("mostRecentType", PrimaryCareBusinessLogic.getLastInsuranceType(patient));
+				model.addAttribute("mostRecentInsuranceNumber", PrimaryCareBusinessLogic.getLastInsuranceNumber(patient));
+				model.addAttribute("insuranceTypes", PrimaryCareBusinessLogic.getInsuranceTypeAnswers());
+
+				return "/module/rwandaprimarycare/insuranceInformation";
+			}
+
+			/** <<<<< Getting and saving the Insurance type and its number >>>>> */
+			if (insuranceType != null && registrationEncounterToday != null) {
+				if (!PrimaryCareUtil.doesEncounterContainObsWithConcept(registrationEncounterToday,PrimaryCareUtil.getInsuranceTypeConcept())) {
+					
+					Obs insType = PrimaryCareUtil.newObs(patient,PrimaryCareUtil.getInsuranceTypeConcept(),registrationEncounterToday.getEncounterDatetime(),PrimaryCareBusinessLogic.getLocationLoggedIn(session));
+					insType.setValueCoded(Context.getConceptService().getConcept(insuranceType));
+
+					Obs insNum = null, expDate = null, covDate = null;
+					if (insuranceNumber != null&& !insuranceNumber.trim().equals("")) {
+						insNum = PrimaryCareUtil.newObs(patient,PrimaryCareUtil.getInsuranceNumberConcept(),registrationEncounterToday.getEncounterDatetime(),PrimaryCareBusinessLogic.getLocationLoggedIn(session));
+						insNum.setValueText(insuranceNumber);
+
+						/** <<<< Getting and Saving the Insurance Start and Expiration Dates >>>> */
+						if (coverageStartDate != null && expirationDate != null)
+							if (!coverageStartDate.equals("")&& !expirationDate.equals(""))
+								if (!PrimaryCareUtil.doesEncounterContainObsWithConcept(registrationEncounterToday,PrimaryCareUtil.getInsuranceExpirationDateConcept())
+										&& !PrimaryCareUtil.doesEncounterContainObsWithConcept(registrationEncounterToday,PrimaryCareUtil.getInsuranceCoverageStartDateConcept())) {
+
+									Date expiration = Context.getDateFormat().parse(expirationDate);
+									Date coverage = Context.getDateFormat().parse(coverageStartDate);
+									expDate = PrimaryCareUtil.newObs(patient,PrimaryCareUtil.getInsuranceExpirationDateConcept(),
+											registrationEncounterToday.getEncounterDatetime(),PrimaryCareBusinessLogic.getLocationLoggedIn(session));
+									expDate.setValueDatetime(expiration);
+									covDate = PrimaryCareUtil.newObs(patient,PrimaryCareUtil.getInsuranceCoverageStartDateConcept(),
+											registrationEncounterToday.getEncounterDatetime(),PrimaryCareBusinessLogic.getLocationLoggedIn(session));
+									covDate.setValueDatetime(coverage);
+
+								}
+						/** <<<< END OF BILLING STUFF >>>> */
+					}
+					// TODO: the concept set thing doesn't work -- add g.p.??
+
+					if (insNum != null)
+						registrationEncounterToday.addObs(insNum);
+					
+					/** Saving the OBS within ENCOUNTER */
+					if (expDate != null && covDate != null){
+						registrationEncounterToday.addObs(expDate);
+						registrationEncounterToday.addObs(covDate);
+					}
+						
+					registrationEncounterToday.addObs(insType);
+					registrationEncounterToday = Context.getEncounterService().saveEncounter(registrationEncounterToday);
+				}
+			}
+		} catch (Exception e) {
+			throw new PrimaryCareException(e);
+		}
+		return "/module/rwandaprimarycare/patient";
+	}
+
+	@RequestMapping("/module/rwandaprimarycare/patientIsPresent")
+	public String patientIsPresent(@RequestParam("patientId") int patientId,
+			HttpSession session) throws PrimaryCareException {
+		// LK: Need to ensure that all primary care methods only throw a
+		// PrimaryCareException
+		// So that errors will be directed to a touch screen error page
+		try {
+			// note: this adds the registration encounter. NOTE: provider in the
+			// created encounter is the registration clerk.
+			PrimaryCareBusinessLogic.patientSeen(new Patient(patientId),
+							(Location) session.getAttribute(PrimaryCareConstants.SESSION_ATTRIBUTE_WORKSTATION_LOCATION),
+							new Date(), Context.getAuthenticatedUser());
+			return "redirect:/module/rwandaprimarycare/patient.form?patientId="
+					+ patientId + "&printBarCode=true&serviceRequested=0";
+		} catch (Exception e) {
+			throw new PrimaryCareException(e);
+		}
+	}
 
 }

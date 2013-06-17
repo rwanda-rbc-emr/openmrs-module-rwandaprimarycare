@@ -19,7 +19,21 @@
 		<td></td>
 		<td>
 			<c:set var="insStr"><spring:message code='rwandaprimarycare.touchscreen.insuranceNumber'/></c:set>
-			<touchscreen:textInput   required="false" label="${insStr}"  name="insuranceNumber" value="${mostRecentInsuranceNumber}" />
+			<touchscreen:textInput required="false" label="${insStr}"  name="insuranceNumber" value="${mostRecentInsuranceNumber}" />
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<c:set var="startDateStr">Coverage Start Date</c:set>
+			<touchscreen:textInput required="false" label="${startDateStr}"  name="coverageStartDate" value="${coverageStartDate}" />
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<c:set var="expDateStr">Expiration Date</c:set>
+			<touchscreen:textInput required="false" label="${expDateStr}"  name="expirationDate" value="${expirationDate}" />
 		</td>
 	</tr>
 	<tr>

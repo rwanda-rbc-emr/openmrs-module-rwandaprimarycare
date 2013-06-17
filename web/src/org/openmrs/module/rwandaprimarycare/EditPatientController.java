@@ -291,7 +291,7 @@ public class EditPatientController {
     		 }
     		Context.getPatientService().savePatient(patient);
     	}
-	        return "redirect:/module/rwandaprimarycare/patient.form?skipPresentQuestion=true&patientId=" + patientId;
+	        return "redirect:/module/rwandaprimarycare/patient.form?skipPresentQuestion=false&patientId=" + patientId;
     	} catch(Exception e)
     	{
     		throw new PrimaryCareException(e);

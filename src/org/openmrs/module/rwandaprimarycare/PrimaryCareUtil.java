@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
 import org.openmrs.ConceptNumeric;
 import org.openmrs.Encounter;
 import org.openmrs.GlobalProperty;
@@ -141,7 +142,7 @@ public class PrimaryCareUtil {
         if (st != null && !st.equals("")){
             try {
                 ret = Context.getConceptService().getConcept(Integer.valueOf(st));
-            } catch (Exception ex){log.info("Unable to load concept for mother's name.  Returning null");}
+            } catch (Exception ex){log.info("Unable to load concept for Rwanda Insurance Type.  Returning null");}
         }
         return ret;
     }
@@ -152,7 +153,29 @@ public class PrimaryCareUtil {
         if (st != null && !st.equals("")){
             try {
                 ret = Context.getConceptService().getConcept(Integer.valueOf(st));
-            } catch (Exception ex){log.info("Unable to load concept for mother's name.  Returning null");}
+            } catch (Exception ex){log.info("Unable to load concept for Rwanda Insurance Number.  Returning null");}
+        }
+        return ret;
+    }
+
+    public static Concept getInsuranceCoverageStartDateConcept(){
+        Concept ret = null;
+        String st = Context.getAdministrationService().getGlobalProperty(PrimaryCareConstants.GLOBAL_PROPERTY_INSURANCE_COVERAGE_START_DATE);
+        if (st != null && !st.equals("")){
+            try {
+                ret = Context.getConceptService().getConcept(Integer.valueOf(st));
+            } catch (Exception ex){log.info("Unable to load concept for Rwanda Insurance Coverage StartDate.  Returning null");}
+        }
+        return ret;
+    }
+    
+    public static Concept getInsuranceExpirationDateConcept(){
+        Concept ret = null;
+        String st = Context.getAdministrationService().getGlobalProperty(PrimaryCareConstants.GLOBAL_PROPERTY_INSURANCE_EXPIRATION_DATE);
+        if (st != null && !st.equals("")){
+            try {
+                ret = Context.getConceptService().getConcept(Integer.valueOf(st));
+            } catch (Exception ex){log.info("Unable to load concept for Rwanda Insurance Expiration Date.  Returning null");}
         }
         return ret;
     }
@@ -263,6 +286,16 @@ public class PrimaryCareUtil {
         }
         return ret;
     }
+//    
+//    public List<Concept> getSelectiveRequestedConcepts(){
+//    	List<Concept> concepts = new ArrayList<Concept>();
+//    	
+//    	for(ConceptAnswer answer: getServiceRequestedConcept().getAnswers()){
+//    		
+//    	}
+//    	
+//    	return concepts;
+//    }
     
     public static boolean isIdentifierStringAValidIdentifier(String identifierStr, Location location){
         IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
@@ -525,19 +558,21 @@ public class PrimaryCareUtil {
 	}
 
 	/**
-	 * Gets the a list of categorized grouup of lab exams
+	 * Gets the a list of categorized group of Requested Primary Care services
 	 * 
 	 * @return List<Concept>
 	 */
 	public static  List<Concept> getPrimaryCareServices() {
-		List<Concept> conceptCategories=new ArrayList<Concept>();
-		GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject("laboratorymodule.labExamCategory");
-				String[] conceptIds = gp.getPropertyValue().split(",");
+		List<Concept> selectedConcepts=new ArrayList<Concept>();
+		GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(PrimaryCareConstants.GLOBAL_PROPERTY_SERVICE_REQUESTED_CONCEPT_ANSWERS);
+		String[] conceptIds = gp.getPropertyValue().split(",");
+		
 		for (String conceptIdstr: conceptIds) {
-			Concept cpt=Context.getConceptService().getConcept(Integer.valueOf(conceptIdstr)) ;
-		conceptCategories.add(cpt);	
 			
+			Concept cpt=Context.getConceptService().getConcept(Integer.valueOf(conceptIdstr)) ;
+			selectedConcepts.add(cpt);
 		}
-		return conceptCategories;
+		
+		return selectedConcepts;
 	}
 }

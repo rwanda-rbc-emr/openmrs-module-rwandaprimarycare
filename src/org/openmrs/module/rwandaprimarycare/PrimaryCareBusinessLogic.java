@@ -620,6 +620,34 @@ public class PrimaryCareBusinessLogic {
 			return null;
 	}
 
+	/**
+	 * Gets the Last Insurance Expiration Date 
+	 * @param patient
+	 * @return
+	 */
+	public static Date getLastInsuranceExpirationDate(Patient patient) {
+		Obs o = PrimaryCareUtil.getMostRecentObs(patient, PrimaryCareUtil
+				.getInsuranceExpirationDateConcept());
+		if (o != null)
+			return o.getObsDatetime();
+		else
+			return null;
+	}
+
+	/**
+	 * Gets the Last Insurance  Coverage Start Date
+	 * @param patient
+	 * @return
+	 */
+	public static Date getLastInsuranceCoverageStartDate(Patient patient) {
+		Obs o = PrimaryCareUtil.getMostRecentObs(patient, PrimaryCareUtil
+				.getInsuranceCoverageStartDateConcept());
+		if (o != null)
+			return o.getObsDatetime();
+		else
+			return null;
+	}
+
 	public static PatientIdentifier getPrimaryPatientIdentifierForLocation(
 			Patient patient, Location location) {
 		List<PatientIdentifier> piList = patient.getActiveIdentifiers();

@@ -46,7 +46,7 @@
 		<delete dir="build" />
 	</target>
 
-	<target name="compile-module" depends="init,clean" description="Compiles the module">
+	<target name="compile-module" depends="init" description="Compiles the module">
 		<mkdir dir="build" />
 		
 		<!-- Copy other source data to the build folder -->

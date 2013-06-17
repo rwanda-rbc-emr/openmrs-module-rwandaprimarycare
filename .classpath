@@ -69,6 +69,6 @@
 	<classpathentry kind="lib" path="lib-common/taglibs-response-1.1.jar"/>
 	<classpathentry kind="lib" path="lib-common/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib-common/mysql-connector-java-5.1.7-bin.jar"/>
-	<classpathentry kind="lib" path="lib-common/mohappointment-0.1.9.jar"/>
+	<classpathentry kind="lib" path="lib-common/mohappointment-0.0.8.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

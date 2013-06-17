@@ -6,7 +6,7 @@
 	<!-- Rwanda Primary Care  Module Properties -->
 	<id>rwandaprimarycare</id>
 	<name>Rwanda Primary Care Module</name>
-	<version>2.0.5</version>
+	<version>2.0.6</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
 	<author>PIH</author>
 	<description>
@@ -21,7 +21,7 @@
 		<require_module>org.openmrs.module.idgen</require_module>
 		<require_module>org.openmrs.module.namephonetics</require_module>
 	  
-       	<require_module version="0.1.9">org.openmrs.module.mohappointment</require_module>
+       	<require_module version="0.0.8">org.openmrs.module.mohappointment</require_module>
 	</require_modules>
 		
 	<extension>
@@ -141,6 +141,28 @@
 		<defaultValue></defaultValue>
 		<description>
 			The conceptID for insurance number
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>registration.insuranceExpirationDateConcept</property>
+		<defaultValue>10832</defaultValue>
+		<description>
+			The conceptID for insurance expiration date
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>registration.insuranceCoverageStartDateConcept</property>
+		<defaultValue>10831</defaultValue>
+		<description>
+			The conceptID for insurance coverage start date
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>registration.serviceRequestedConceptAnswers</property>
+		<defaultValue>8056,8055,8054,8053,6713,6712,6711,6710,10826</defaultValue>
+		<description>
+			The conceptIds for the services that a patient can come to the registration desk for,
+			and those have to be available to this location.  
 		</description>
 	</globalProperty>
 	
