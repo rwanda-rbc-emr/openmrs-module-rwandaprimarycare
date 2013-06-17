@@ -552,8 +552,6 @@ public class PrimaryCareUtil {
 		waitingAppointment.setLocation(PrimaryCareBusinessLogic.getLocationLoggedIn(session));
 		waitingAppointment.setService(AppointmentUtil.getServiceByConcept(serviceConcept));
 		
-		log.info("<<<<<<<<<____Service Concept ID__"+getServiceRequestedConcept()+"__SERVICE NAME:____"+AppointmentUtil.getServiceByConcept(getServiceRequestedConcept())+"_________>>>>>>>");
-		
 		AppointmentUtil.saveWaitingAppointment(waitingAppointment);
 	}
 
