@@ -28,6 +28,35 @@
 			<artifactId>openmrs-web</artifactId>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>org.openmrs.test</groupId>
+			<artifactId>openmrs-test</artifactId>
+			<version>${openMRSVersion}</version>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.api</groupId>
+			<artifactId>openmrs-api</artifactId>
+			<version>${openMRSVersion}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>idgen-api</artifactId>
+			<type>jar</type>
+			<scope>provided</scope>
+			<version>${idgenVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>addresshierarchyrwanda-api</artifactId>
+			<type>jar</type>
+			<scope>provided</scope>
+			<version>${addresshierarchyrwandaVersion}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

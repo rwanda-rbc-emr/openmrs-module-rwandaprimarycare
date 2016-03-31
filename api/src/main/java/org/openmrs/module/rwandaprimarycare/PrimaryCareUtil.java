@@ -12,7 +12,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
 import org.openmrs.ConceptNumeric;
 import org.openmrs.Encounter;
 import org.openmrs.GlobalProperty;
@@ -28,7 +27,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.SequentialIdentifierGenerator;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
-import org.openmrs.module.mohappointment.model.Appointment;
+import org.openmrs.module.mohappointment.model.MoHAppointment;
 import org.openmrs.module.mohappointment.utils.AppointmentUtil;
 import org.openmrs.patient.IdentifierValidator;
 
@@ -537,7 +536,7 @@ public class PrimaryCareUtil {
 	 * @param patient
 	 */
 	public static void createWaitingAppointment(Person provider, Encounter encounter, Obs obs, HttpSession session, Concept serviceConcept) {
-		Appointment waitingAppointment = new Appointment();
+		MoHAppointment waitingAppointment = new MoHAppointment();
 		// Setting appointment attributes
 		waitingAppointment.setAppointmentDate(new Date());
 		waitingAppointment.setAttended(false);

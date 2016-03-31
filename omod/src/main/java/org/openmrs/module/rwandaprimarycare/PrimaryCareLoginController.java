@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/module/rwandaprimarycare/login/*")
-public class LoginController {
+public class PrimaryCareLoginController {
 
-	protected static final Log log = LogFactory.getLog(LoginController.class);
+	protected static final Log log = LogFactory.getLog(PrimaryCareLoginController.class);
 
 	
 	@RequestMapping(method=RequestMethod.GET)

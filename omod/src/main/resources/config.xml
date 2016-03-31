@@ -1,6 +1,4 @@
-<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.0//EN"
-                         "http://resources.openmrs.org/doctype/config-1.0.dtd">
-                         
+<?xml version="1.0" encoding="UTF-8"?>
 <module configVersion="1.0">
 	
 	<!-- Rwanda Primary Care  Module Properties -->
@@ -13,16 +11,18 @@
 			The touch-screen module used in Rwanda for primary care registration.  Features the Boabab touchscreen
 			rendering library, as well as barcode printing.
 	</description>
-	<activator>@MODULE_PACKAGE@.RwandaPrimaryCareActivator</activator>
-	<!-- /Rwanda Primary Care Module Properties -->
+	
+	<require_version>${openMRSVersion}</require_version>
 	
 	<require_modules>
-		<require_module>org.openmrs.module.addresshierarchyrwanda</require_module>
-		<require_module>org.openmrs.module.idgen</require_module>
-		<require_module>org.openmrs.module.namephonetics</require_module>
-	  
-       	<require_module version="0.0.8">org.openmrs.module.mohappointment</require_module>
+		<require_module version="${addresshierarchyrwandaVersion}">org.openmrs.module.addresshierarchyrwanda</require_module>
+		<require_module version="${idgenVersion}">org.openmrs.module.idgen</require_module>
+		<require_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</require_module>
+       	<require_module version="${mohappointmentVersion}">org.openmrs.module.mohappointment</require_module>
 	</require_modules>
+	
+	<activator>@MODULE_PACKAGE@.RwandaPrimaryCareActivator</activator>
+	<!-- /Rwanda Primary Care Module Properties -->
 		
 	<extension>
 		<point>org.openmrs.tracmodule.list</point>
